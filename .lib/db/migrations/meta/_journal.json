@@ -15,6 +15,13 @@
       "when": 1715534766134,
       "tag": "0001_strong_rachel_grey",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1715580781555,
+      "tag": "0002_sticky_leader",
+      "breakpoints": true
     }
   ]
 }

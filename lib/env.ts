@@ -5,6 +5,7 @@ const envSchema = z.object({
   CLERK_SECRET_KEY: z.string().min(32),
   CLERK_PUBLISHABLE_KEY: z.string().min(32),
   DATABASE_URL: z.string(),
+  NEXT_PUBLIC_APP_URL: z.string(),
 });
 
 const env = envSchema.parse(process.env);
