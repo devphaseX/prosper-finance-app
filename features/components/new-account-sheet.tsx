@@ -9,7 +9,7 @@ import {
 } from '@/components/ui/sheet';
 import { useNewAccount } from '../hooks/use-new-account';
 import { AccountForm } from '@/features/components/account-form';
-import { useCreateAccount } from '../hooks/use-create-account';
+import { useCreateAccount } from '../accounts/api/use-create-account';
 
 export const NewAccountSheet = () => {
   const { opened, onClose, onOpen } = useNewAccount();
