@@ -20,6 +20,8 @@ app.onError((err, c) => {
     return err.getResponse();
   }
 
+  console.log({ err });
+
   return c.json({ error: 'Internal err' }, httpStatus.INTERNAL_SERVER_ERROR);
 });
 

@@ -27,6 +27,7 @@ const app = new Hono()
     zValidator('json', insertAccountSchema.pick({ name: true })),
     async (c) => {
       const auth = getAuth(c);
+      console.log({ auth });
 
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);

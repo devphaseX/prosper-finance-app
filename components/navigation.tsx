@@ -31,7 +31,7 @@ export const Navigation = () => {
   if (mobileViewActive) {
     return (
       <Sheet open={menuModalOpen} onOpenChange={setMenuModalOpen}>
-        <SheetTrigger>
+        <SheetTrigger asChild>
           <Button
             variant="outline"
             size="sm"
