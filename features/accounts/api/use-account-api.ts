@@ -1,9 +1,9 @@
 import { useQuery } from '@tanstack/react-query';
 import { client } from '@/lib/hono';
 
-export const useGetAccount = (id: string) => {
+export const useGetAccount = (id?: string) => {
   const query = useQuery({
-    queryKey: ['account'],
+    queryKey: ['account', id],
     queryFn: async () => {
       const response = await client.api.accounts[':id'].$get({
         param: { id },
@@ -16,6 +16,7 @@ export const useGetAccount = (id: string) => {
       const { data } = await response.json();
       return data;
     },
+    enabled: typeof id !== 'undefined',
   });
 
   return query;

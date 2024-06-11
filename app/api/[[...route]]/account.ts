@@ -6,7 +6,7 @@ import { db } from '@/lib/db/init';
 import { accounts, insertAccountSchema } from '@/lib/db/schema';
 import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
-import { getAccountByIdQuerySchema } from '@/lib/schema/query';
+import { withIdSchema } from '@/lib/schema/query';
 
 const app = new Hono()
   .use(clerkMiddleware())
@@ -24,7 +24,7 @@ const app = new Hono()
 
     return c.json({ data: registeredAccounts });
   })
-  .get('/:id', zValidator('param', getAccountByIdQuerySchema), async (c) => {
+  .get('/:id', zValidator('param', withIdSchema), async (c) => {
     const auth = getAuth(c);
     if (!auth?.userId) {
       return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);
@@ -43,6 +43,53 @@ const app = new Hono()
     return c.json({
       data: requestedAccount,
     });
+  })
+  .patch(
+    '/:id',
+    zValidator('param', withIdSchema),
+    zValidator('json', insertAccountSchema.pick({ name: true })),
+    async (c) => {
+      const auth = getAuth(c);
+      const { id } = c.req.valid('param');
+      const values = c.req.valid('json');
+
+      if (!auth?.userId) {
+        return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);
+      }
+
+      const [updatedAccount] = await db
+        .update(accounts)
+        .set(values)
+        .where(and(eq(accounts.userId, auth.userId), eq(accounts.id, id)))
+        .returning();
+
+      if (!updatedAccount) {
+        return c.json({ error: 'Not found' }, httpStatus.NOT_FOUND);
+      }
+
+      return c.json({ data: updatedAccount });
+    }
+  )
+  .delete('/:id', zValidator('param', withIdSchema), async (c) => {
+    const auth = getAuth(c);
+    const { id } = c.req.valid('param');
+
+    if (!auth?.userId) {
+      return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);
+    }
+
+    const [updatedAccount] = await db
+      .delete(accounts)
+      .where(and(eq(accounts.userId, auth.userId), eq(accounts.id, id)))
+      .returning({
+        id: accounts.id,
+      });
+
+    if (!updatedAccount) {
+      return c.json({ error: 'Not found' }, httpStatus.NOT_FOUND);
+    }
+
+    return c.json({ data: updatedAccount });
   })
   .post(
     '/',
