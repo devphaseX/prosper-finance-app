@@ -7,7 +7,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from '@/components/ui/sheet';
-import { useNewAccount } from '../hooks/use-new-account';
+import { useNewAccount } from '../../hooks/use-new-account';
 import { AccountForm } from '@/features/components/account-form';
 import { useCreateAccount } from '../accounts/api/use-create-account';
 

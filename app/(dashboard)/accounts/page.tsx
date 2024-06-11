@@ -2,13 +2,13 @@
 
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { useNewAccount } from '@/features/hooks/use-new-account';
-import { useGetAccounts } from '@/features/accounts/api/use-account-api';
+import { useGetAccounts } from '@/features/accounts/api/use-accounts-api';
 import { useBulkAccountDelete } from '@/features/accounts/api/use-bulk-delete-api';
 import { Loader2, Plus } from 'lucide-react';
 import { columns } from './columns';
 import { DataTable } from '@/components/data-table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { useNewAccount } from '@/hooks/use-new-account';
 
 const AccountsPage = () => {
   const openNewAccountForm = useNewAccount(({ onOpen }) => onOpen);

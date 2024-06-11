@@ -4,8 +4,9 @@ import { zValidator } from '@hono/zod-validator';
 import httpStatus from 'http-status';
 import { db } from '@/lib/db/init';
 import { accounts, insertAccountSchema } from '@/lib/db/schema';
-import { and, arrayContains, eq, inArray, sql } from 'drizzle-orm';
+import { and, eq, inArray } from 'drizzle-orm';
 import { z } from 'zod';
+import { getAccountByIdQuerySchema } from '@/lib/schema/query';
 
 const app = new Hono()
   .use(clerkMiddleware())
@@ -23,12 +24,31 @@ const app = new Hono()
 
     return c.json({ data: registeredAccounts });
   })
+  .get('/:id', zValidator('param', getAccountByIdQuerySchema), async (c) => {
+    const auth = getAuth(c);
+    if (!auth?.userId) {
+      return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);
+    }
+
+    const { id } = c.req.valid('param');
+
+    const [requestedAccount] = await db
+      .select({
+        id: accounts.id,
+        name: accounts.name,
+      })
+      .from(accounts)
+      .where(and(eq(accounts.userId, auth.userId), eq(accounts.id, id)));
+
+    return c.json({
+      data: requestedAccount,
+    });
+  })
   .post(
     '/',
     zValidator('json', insertAccountSchema.pick({ name: true })),
     async (c) => {
       const auth = getAuth(c);
-      console.log({ auth });
 
       if (!auth?.userId) {
         return c.json({ error: 'Unauthorized' }, httpStatus.UNAUTHORIZED);
