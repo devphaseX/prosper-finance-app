@@ -3,8 +3,9 @@ import { NextResponse } from 'next/server';
 
 const routeProtected = createRouteMatcher(['/']);
 
+export const runtimes = 'nodejs';
+
 export default clerkMiddleware((auth, req) => {
-  console.log({ a: routeProtected(req) });
   if (routeProtected(req)) {
     auth().protect();
     return;

@@ -26,3 +26,17 @@ export const accounts = pgTable('accounts', {
 export const insertAccountSchema = createInsertSchema(accounts, {
   name: z.string().max(50),
 });
+
+export const categories = pgTable('categories', {
+  id: text('id')
+    .primaryKey()
+    .$defaultFn(() => createId()),
+  plaidId: text('plaid_id'),
+  name: varchar('name', { length: 50 }).notNull(),
+  userId: text('user_id').notNull(),
+  ...withTimestamps,
+});
+
+export const insertCategorySchema = createInsertSchema(categories, {
+  name: z.string().max(50),
+});

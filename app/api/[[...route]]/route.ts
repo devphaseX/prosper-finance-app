@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
 import { handle } from 'hono/vercel';
 import accountRoute from './account';
+import categoriesRoute from './categories';
 import { HTTPException } from 'hono/http-exception';
 import httpStatus from 'http-status';
 
@@ -13,7 +14,8 @@ const app = new Hono()
       message: 'Hello Next.js!',
     });
   })
-  .route('/accounts', accountRoute);
+  .route('/accounts', accountRoute)
+  .route('/categories', categoriesRoute);
 
 app.onError((err, c) => {
   if (err instanceof HTTPException) {
